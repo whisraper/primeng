@@ -4,7 +4,9 @@
 [![npm version](https://badge.fury.io/js/primeng.svg)](https://badge.fury.io/js/primeng)
 [![Build Status](https://travis-ci.org/primefaces/primeng.svg?branch=master)](https://travis-ci.org/primefaces/primeng)
 
-# PrimeNG
+# PrimeNG WCAG
+
+Fork of PrimeNG to work with WCAG compliance at version for Angular 4.
 
 UI Components for Angular
 
