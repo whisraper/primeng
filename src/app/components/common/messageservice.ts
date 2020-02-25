@@ -5,23 +5,25 @@ import { Message } from './message';
 
 @Injectable()
 export class MessageService {
-    
+
     private messageSource = new Subject<Message>();
-    
+
     messageObserver = this.messageSource.asObservable();
-    
+
     add(message: Message) {
         if(message) {
             this.messageSource.next(message);
         }
     }
-    
+
     addAll(messages: Message[]) {
         if(messages && messages.length) {
-            this.messageSource.next(messages);
-        } 
+          for (let m of messages) {
+            this.messageSource.next(m);
+          }
+        }
     }
-    
+
     clear() {
         this.messageSource.next(null);
     }

@@ -19,6 +19,7 @@ import {Header,Footer,SharedModule} from '../common/shared';
                 </span>
                 <a *ngIf="closable" [ngClass]="{'ui-dialog-titlebar-icon ui-dialog-titlebar-close ui-corner-all':true}" href="#" role="button" (click)="close($event)" (mousedown)="onCloseMouseDown($event)">
                     <span class="fa fa-fw fa-close"></span>
+                    <span class="sr-only">Close</span>
                 </a>
             </div>
             <div #content class="ui-dialog-content ui-widget-content" [ngStyle]="contentStyle">
@@ -48,7 +49,7 @@ import {Header,Footer,SharedModule} from '../common/shared';
 export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
 
     @Input() id: string;
-    
+
     @Input() ariaLabelledBy: string;
 
     @Input() header: string;
@@ -56,7 +57,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
     @Input() draggable: boolean = true;
 
     @Input() resizable: boolean = true;
-    
+
     @Input() minWidth: number = 150;
 
     @Input() minHeight: number = 150;
@@ -74,7 +75,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
     @Input() modal: boolean;
 
     @Input() closeOnEscape: boolean = true;
-	
+
     @Input() dismissableMask: boolean;
 
     @Input() rtl: boolean;
@@ -82,31 +83,31 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
     @Input() closable: boolean = true;
 
     @Input() responsive: boolean = true;
-    
+
     @Input() appendTo: any;
-    
+
     @Input() style: any;
-        
+
     @Input() styleClass: string;
-    
+
     @Input() showHeader: boolean = true;
-    
+
     @Input() breakpoint: number = 640;
-    
+
     @Input() blockScroll: boolean = false;
-    
+
     @Input() autoZIndex: boolean = true;
-    
+
     @Input() baseZIndex: number = 0;
-        
+
     @ContentChildren(Header, {descendants: false}) headerFacet: QueryList<Header>;
-    
+
     @ContentChildren(Footer, {descendants: false}) footerFacet: QueryList<Header>;
-            
+
     @ViewChild('container') containerViewChild: ElementRef;
-    
+
     @ViewChild('titlebar') headerViewChild: ElementRef;
-    
+
     @ViewChild('content') contentViewChild: ElementRef;
 
     @Output() onShow: EventEmitter<any> = new EventEmitter();
@@ -114,50 +115,50 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
     @Output() onHide: EventEmitter<any> = new EventEmitter();
 
     @Output() visibleChange:EventEmitter<any> = new EventEmitter();
-    
+
     _visible: boolean;
-    
+
     dragging: boolean;
 
     documentDragListener: any;
-    
+
     resizing: boolean;
 
     documentResizeListener: any;
-    
+
     documentResizeEndListener: any;
-    
+
     documentResponsiveListener: any;
-    
+
     documentEscapeListener: Function;
-	
+
     maskClickListener: Function;
-    
+
     lastPageX: number;
-    
+
     lastPageY: number;
-    
+
     mask: HTMLDivElement;
-            
+
     closeIconMouseDown: boolean;
-    
+
     preWidth: number;
-    
+
     preventVisibleChangePropagation: boolean;
-    
+
     executePostDisplayActions: boolean;
-    
+
     initialized: boolean;
-                
+
     constructor(public el: ElementRef, public domHandler: DomHandler, public renderer: Renderer2, public zone: NgZone) {}
-    
+
     @Input() get visible(): boolean {
         return this._visible;
     }
 
     set visible(val:boolean) {
         this._visible = val;
-        
+
         if(this.initialized && this.containerViewChild && this.containerViewChild.nativeElement) {
             if(this._visible)
                 this.show();
@@ -169,35 +170,35 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             }
         }
     }
-        
+
     ngAfterViewChecked() {
         if(this.executePostDisplayActions) {
             this.onShow.emit({});
             this.positionOverlay();
             this.executePostDisplayActions = false;
-        } 
+        }
     }
 
     show() {
         this.executePostDisplayActions = true;
         this.moveOnTop();
         this.bindGlobalListeners();
-        
+
         if(this.modal) {
             this.enableModality();
         }
     }
-        
+
     positionOverlay() {
         let viewport = this.domHandler.getViewport();
         if(this.domHandler.getOuterHeight(this.containerViewChild.nativeElement) > viewport.height) {
              this.contentViewChild.nativeElement.style.height = (viewport.height * .75) + 'px';
         }
-        
+
         if(this.positionLeft >= 0 && this.positionTop >= 0) {
             this.containerViewChild.nativeElement.style.left = this.positionLeft + 'px';
             this.containerViewChild.nativeElement.style.top = this.positionTop + 'px';
-        } 
+        }
         else if (this.positionTop >= 0) {
           this.center();
           this.containerViewChild.nativeElement.style.top = this.positionTop + 'px';
@@ -206,39 +207,39 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             this.center();
         }
     }
-    
+
     hide() {
         this.onHide.emit({});
         this.unbindMaskClickListener();
         this.unbindGlobalListeners();
-        
+
         if(this.modal) {
             this.disableModality();
         }
     }
-    
+
     close(event: Event) {
         this.preventVisibleChangePropagation = true;
         this.hide();
         this.visibleChange.emit(false);
         event.preventDefault();
     }
-        
-    ngAfterViewInit() { 
+
+    ngAfterViewInit() {
         this.initialized = true;
-                      
+
         if(this.appendTo) {
             if(this.appendTo === 'body')
                 document.body.appendChild(this.containerViewChild.nativeElement);
             else
                 this.domHandler.appendChild(this.containerViewChild.nativeElement, this.appendTo);
         }
-        
+
         if(this.visible) {
             this.show();
         }
     }
-        
+
     center() {
         let elementWidth = this.domHandler.getOuterWidth(this.containerViewChild.nativeElement);
         let elementHeight = this.domHandler.getOuterHeight(this.containerViewChild.nativeElement);
@@ -257,7 +258,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
         this.containerViewChild.nativeElement.style.left = x + 'px';
         this.containerViewChild.nativeElement.style.top = y + 'px';
     }
-    
+
     enableModality() {
         if(!this.mask) {
             this.mask = document.createElement('div');
@@ -267,7 +268,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
                 maskStyleClass += ' ui-dialog-mask-scrollblocker';
             }
             this.domHandler.addMultipleClasses(this.mask, maskStyleClass);
-            
+
 			if(this.closable && this.dismissableMask) {
 	             this.maskClickListener = this.renderer.listen(this.mask, 'click', (event: any) => {
 					this.close(event);
@@ -279,7 +280,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             }
         }
     }
-    
+
     disableModality() {
         if(this.mask) {
             document.body.removeChild(this.mask);
@@ -293,7 +294,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
                         break;
                     }
                 }
-                
+
                 if(!hasBlockerMasks) {
                     this.domHandler.removeClass(document.body, 'ui-overflow-hidden');
                 }
@@ -301,31 +302,31 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             this.mask = null;
         }
     }
-        
+
     unbindMaskClickListener() {
         if(this.maskClickListener) {
             this.maskClickListener();
             this.maskClickListener = null;
 		}
     }
-    
+
     moveOnTop() {
         if(this.autoZIndex) {
             this.containerViewChild.nativeElement.style.zIndex = String(this.baseZIndex + (++DomHandler.zindex));
         }
-        
+
     }
-    
+
     onCloseMouseDown(event: Event) {
         this.closeIconMouseDown = true;
     }
-    
+
     initDrag(event: MouseEvent) {
         if(this.closeIconMouseDown) {
             this.closeIconMouseDown = false;
             return;
         }
-        
+
         if(this.draggable) {
             this.dragging = true;
             this.lastPageX = event.pageX;
@@ -333,7 +334,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             this.domHandler.addClass(document.body, 'ui-unselectable-text');
         }
     }
-    
+
     onDrag(event: MouseEvent) {
         if(this.dragging) {
             let deltaX = event.pageX - this.lastPageX;
@@ -343,19 +344,19 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
 
             this.containerViewChild.nativeElement.style.left = leftPos + deltaX + 'px';
             this.containerViewChild.nativeElement.style.top = topPos + deltaY + 'px';
-            
+
             this.lastPageX = event.pageX;
             this.lastPageY = event.pageY;
         }
     }
-    
+
     endDrag(event: MouseEvent) {
         if(this.draggable) {
             this.dragging = false;
             this.domHandler.removeClass(document.body, 'ui-unselectable-text');
         }
     }
-    
+
     initResize(event: MouseEvent) {
         if(this.resizable) {
             this.preWidth = null;
@@ -365,7 +366,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             this.domHandler.addClass(document.body, 'ui-unselectable-text');
         }
     }
-    
+
     onResize(event: MouseEvent) {
         if(this.resizing) {
             let deltaX = event.pageX - this.lastPageX;
@@ -379,7 +380,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             if(newWidth > this.minWidth) {
                 this.containerViewChild.nativeElement.style.width = newWidth + 'px';
             }
-                
+
             if(newHeight > this.minHeight) {
                 this.containerViewChild.nativeElement.style.height = newHeight + 'px';
                 this.contentViewChild.nativeElement.style.height = contentHeight + deltaY + 'px';
@@ -389,53 +390,53 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             this.lastPageY = event.pageY;
         }
     }
-    
+
     onResizeEnd(event: MouseEvent) {
         if(this.resizing) {
             this.resizing = false;
             this.domHandler.removeClass(document.body, 'ui-unselectable-text');
         }
-    } 
-    
+    }
+
     bindGlobalListeners() {
         if(this.draggable) {
             this.bindDocumentDragListener();
         }
-        
+
         if(this.resizable) {
             this.bindDocumentResizeListeners();
         }
-        
+
         if(this.responsive) {
             this.bindDocumentResponsiveListener();
         }
-        
+
         if(this.closeOnEscape && this.closable) {
             this.bindDocumentEscapeListener();
         }
     }
-    
+
     unbindGlobalListeners() {
         this.unbindDocumentDragListener();
         this.unbindDocumentResizeListeners();
         this.unbindDocumentResponsiveListener();
         this.unbindDocumentEscapeListener();
     }
-    
+
     bindDocumentDragListener() {
         this.zone.runOutsideAngular(() => {
             this.documentDragListener = this.onDrag.bind(this);
             window.document.addEventListener('mousemove', this.documentDragListener);
         });
     }
-    
+
     unbindDocumentDragListener() {
         if(this.documentDragListener) {
             window.document.removeEventListener('mousemove', this.documentDragListener);
             this.documentDragListener = null;
         }
     }
-    
+
     bindDocumentResizeListeners() {
         this.zone.runOutsideAngular(() => {
             this.documentResizeListener = this.onResize.bind(this);
@@ -444,7 +445,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             window.document.addEventListener('mouseup', this.documentResizeEndListener);
         });
     }
-    
+
     unbindDocumentResizeListeners() {
         if(this.documentResizeListener && this.documentResizeEndListener) {
             window.document.removeEventListener('mouseup', this.documentResizeListener);
@@ -453,21 +454,21 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             this.documentResizeEndListener = null;
         }
     }
-    
+
     bindDocumentResponsiveListener() {
         this.zone.runOutsideAngular(() => {
             this.documentResponsiveListener = this.onWindowResize.bind(this);
             window.addEventListener('resize', this.documentResponsiveListener);
         });
     }
-    
+
     unbindDocumentResponsiveListener() {
         if(this.documentResponsiveListener) {
             window.removeEventListener('resize', this.documentResponsiveListener);
             this.documentResponsiveListener = null;
         }
     }
-    
+
     onWindowResize(event) {
         let viewport = this.domHandler.getViewport();
         let width = this.domHandler.getOuterWidth(this.containerViewChild.nativeElement);
@@ -483,7 +484,7 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             this.positionOverlay();
         }
     }
-    
+
     bindDocumentEscapeListener() {
         this.documentEscapeListener = this.renderer.listen('document', 'keydown', (event) => {
             if(event.which == 27) {
@@ -493,25 +494,25 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
             }
         });
     }
-    
+
     unbindDocumentEscapeListener() {
         if(this.documentEscapeListener) {
             this.documentEscapeListener();
             this.documentEscapeListener = null;
         }
     }
-    
+
     ngOnDestroy() {
         this.initialized = false;
-        
+
         this.disableModality();
-        
+
         this.unbindGlobalListeners();
-        
+
         if(this.appendTo) {
             this.el.nativeElement.appendChild(this.containerViewChild.nativeElement);
         }
-		
+
 		this.unbindMaskClickListener();
     }
 

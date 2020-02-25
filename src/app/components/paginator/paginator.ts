@@ -12,10 +12,12 @@ import {SelectItem} from '../common/selectitem';
             <a href="#" class="ui-paginator-first ui-paginator-element ui-state-default ui-corner-all"
                     (click)="changePageToFirst($event)" [ngClass]="{'ui-state-disabled':isFirstPage()}" [tabindex]="isFirstPage() ? -1 : null">
                 <span class="fa fa-step-backward"></span>
+                <span class="sr-only">FirstPage</span>
             </a>
             <a href="#" class="ui-paginator-prev ui-paginator-element ui-state-default ui-corner-all"
                     (click)="changePageToPrev($event)" [ngClass]="{'ui-state-disabled':isFirstPage()}" [tabindex]="isFirstPage() ? -1 : null">
                 <span class="fa fa-backward"></span>
+                <span class="sr-only">Backward</span>
             </a>
             <span class="ui-paginator-pages">
                 <a href="#" *ngFor="let pageLink of pageLinks" class="ui-paginator-page ui-paginator-element ui-state-default ui-corner-all"
@@ -24,10 +26,12 @@ import {SelectItem} from '../common/selectitem';
             <a href="#" class="ui-paginator-next ui-paginator-element ui-state-default ui-corner-all"
                     (click)="changePageToNext($event)" [ngClass]="{'ui-state-disabled':isLastPage()}" [tabindex]="isLastPage() ? -1 : null">
                 <span class="fa fa-forward"></span>
+                <span class="sr-only">Forward</span>
             </a>
             <a href="#" class="ui-paginator-last ui-paginator-element ui-state-default ui-corner-all"
                     (click)="changePageToLast($event)" [ngClass]="{'ui-state-disabled':isLastPage()}" [tabindex]="isLastPage() ? -1 : null">
                 <span class="fa fa-step-forward"></span>
+                <span class="sr-only">LastPage</span>
             </a>
             <p-dropdown [options]="rowsPerPageItems" [(ngModel)]="rows" *ngIf="rowsPerPageOptions" 
                 (onChange)="onRppChange($event)" [lazy]="false" [autoWidth]="false"></p-dropdown>
@@ -53,9 +57,9 @@ export class Paginator {
     _first: number = 0;
 
     _rows: number = 0;
-    
+
     _rowsPerPageOptions: number[];
-    
+
     rowsPerPageItems: SelectItem[];
 
     @Input() get totalRecords(): number {
@@ -84,7 +88,7 @@ export class Paginator {
         this._rows = val;
         this.updatePageLinks();
     }
-    
+
     @Input() get rowsPerPageOptions(): number[] {
         return this._rowsPerPageOptions;
     }

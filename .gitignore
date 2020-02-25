@@ -7,6 +7,9 @@
 /components
 /resources
 /aot
+*.ngfactory.ts
+*.ngsummary.json
+*.tgz
 
 # dependencies
 /node_modules
