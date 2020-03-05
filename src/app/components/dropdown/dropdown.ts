@@ -41,7 +41,7 @@ export const DROPDOWN_VALUE_ACCESSOR: any = {
                 [style.display]="panelVisible ? 'block' : 'none'" [ngStyle]="panelStyle" [class]="panelStyleClass">
                 <div *ngIf="filter" class="ui-dropdown-filter-container" (input)="onFilter($event)" (click)="$event.stopPropagation()">
                     <input #filter type="text" autocomplete="off" class="ui-dropdown-filter ui-inputtext ui-widget ui-state-default ui-corner-all" [attr.placeholder]="filterPlaceholder"
-                    (keydown.enter)="$event.preventDefault()" (keydown)="onKeydown($event)">
+                    (keydown.enter)="$event.preventDefault()" (keydown)="onKeydown($event)" aria-label="Szukaj">
                     <span class="fa fa-search"></span>
                     <span class="sr-only">Szukaj</span>
                 </div>

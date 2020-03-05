@@ -6,7 +6,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     del = require('del'),
     flatten = require('gulp-flatten');
-    
+
 gulp.task('build-css', function() {
 	gulp.src([
         'src/app/components/common/common.css',
@@ -25,7 +25,7 @@ gulp.task('build-css-prod', function() {
 	  .pipe(gulp.dest('resources'))
     .pipe(uglifycss({"uglyComments": true}))
     .pipe(rename('primeng.min.css'))
-    .pipe(gulp.dest('resources'));	
+    .pipe(gulp.dest('resources'));
 });
 
 gulp.task('images', function() {
@@ -45,6 +45,5 @@ gulp.task('clean', function() {
 });
 
 //Building project with run sequence
-gulp.task('build-assets', ['clean','build-css-prod', 'images', 'themes']);
+gulp.task('build-assets', ['clean', 'themes', 'build-css-prod', 'images' ]);
 
-        
