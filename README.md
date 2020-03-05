@@ -4,6 +4,13 @@
 
 # PrimeNG
 
+To build you need and nodeJs at version 10.19.0 and npm at version 6.13.4. I suggest using NVM or NVM for Windows with multiple versions.
+To send to npm repository:
+    1) RUN  npm run build-redistribute
+    2) Then change version of app in package.json
+    3) RUN npm publish
+I everything is ok, you should see a list of component files send to repository.
+
 UI Components for Angular
 
 See [PrimeNG homepage](http://www.primefaces.org/primeng) for live showcase and documentation.
