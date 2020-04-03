@@ -22,6 +22,9 @@ import {Header,Footer,SharedModule} from '../common/shared';
                     <span class="sr-only">Close</span>
                 </a>
             </div>
+            <div class="hidden-nav-link">
+              <a tabindex="-1" #focus >TECHNICAL</a>
+            </div>
             <div #content class="ui-dialog-content ui-widget-content" [ngStyle]="contentStyle">
                 <ng-content></ng-content>
             </div>
@@ -150,6 +153,9 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
 
     initialized: boolean;
 
+    @ViewChild('focus') focusElement: ElementRef;
+
+
     constructor(public el: ElementRef, public domHandler: DomHandler, public renderer: Renderer2, public zone: NgZone) {}
 
     @Input() get visible(): boolean {
@@ -174,8 +180,11 @@ export class Dialog implements AfterViewInit,AfterViewChecked,OnDestroy {
     ngAfterViewChecked() {
         if(this.executePostDisplayActions) {
             this.onShow.emit({});
-            this.positionOverlay();
-            this.executePostDisplayActions = false;
+            setTimeout(() => {
+                this.positionOverlay();
+                this.focusElement.nativeElement.focus();
+                this.executePostDisplayActions = false;
+            }, 0);
         }
     }
 

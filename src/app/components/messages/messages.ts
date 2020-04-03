@@ -14,6 +14,7 @@ import {Subscription}   from 'rxjs/Subscription';
                     'ui-messages-success':(value[0].severity === 'success')}">
             <a href="#" class="ui-messages-close" (click)="clear($event)" *ngIf="closable">
                 <i class="fa fa-close"></i>
+                <span class="sr-only">Close</span>
             </a>
             <span class="ui-messages-icon fa fa-fw fa-2x" [ngClass]="icon"></span>
             <ul>
@@ -30,9 +31,9 @@ export class Messages implements OnDestroy {
     @Input() value: Message[];
 
     @Input() closable: boolean = true;
-    
+
     @Output() valueChange: EventEmitter<Message[]> = new EventEmitter<Message[]>();
-    
+
     subscription: Subscription;
 
     constructor(@Optional() public messageService: MessageService) {
@@ -65,7 +66,7 @@ export class Messages implements OnDestroy {
 
         event.preventDefault();
     }
-    
+
     get icon(): string {
         let icon: string = null;
         if(this.hasMessages()) {
@@ -74,32 +75,32 @@ export class Messages implements OnDestroy {
                 case 'success':
                     icon = 'fa-check';
                 break;
-                
+
                 case 'info':
                     icon = 'fa-info-circle';
                 break;
-                
+
                 case 'error':
                     icon = 'fa-close';
                 break;
-                
+
                 case 'warn':
                     icon = 'fa-warning';
                 break;
-                
+
                 case 'success':
                     icon = 'fa-check';
                 break;
-                
+
                 default:
                     icon = 'fa-info-circle';
                 break;
             }
         }
-        
+
         return icon;
     }
-    
+
     ngOnDestroy() {
         if(this.subscription) {
             this.subscription.unsubscribe();

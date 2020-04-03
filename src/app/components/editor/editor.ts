@@ -21,12 +21,14 @@ export const EDITOR_VALUE_ACCESSOR: any = {
             </div>
             <div class="ui-editor-toolbar ui-widget-header ui-corner-top" *ngIf="!toolbar">
                 <span class="ql-formats">
-                    <select class="ql-header">
+                    <span class="sr-only" id="font-size">Font size:</span>
+                    <select class="ql-header" aria-labelledby="font-size">
                       <option value="1">Heading</option>
                       <option value="2">Subheading</option>
                       <option selected>Normal</option>
                     </select>
-                    <select class="ql-font">
+                    <span class="sr-only" id="font-type">Font type:</span>
+                    <select class="ql-font" aria-labelledby="font-type">
                       <option selected>Sans Serif</option>
                       <option value="serif">Serif</option>
                       <option value="monospace">Monospace</option>
@@ -38,13 +40,16 @@ export const EDITOR_VALUE_ACCESSOR: any = {
                     <button class="ql-underline" aria-label="Underline"></button>
                 </span>
                 <span class="ql-formats">
-                    <select class="ql-color"></select>
-                    <select class="ql-background"></select>
+                    <span class="sr-only" id="color">Color:</span>
+                    <select class="ql-color" aria-labelledby="color"></select>
+                    <span class="sr-only" id="background">Background:</span>
+                    <select class="ql-background" aria-labelledby="background"></select>
                 </span>
                 <span class="ql-formats">
                     <button class="ql-list" value="ordered" aria-label="Ordered List"></button>
                     <button class="ql-list" value="bullet" aria-label="Unordered List"></button>
-                    <select class="ql-align">
+                    <span class="sr-only" id="align">Align:</span>
+                    <select class="ql-align" aria-labelledby="align">
                         <option selected></option>
                         <option value="center"></option>
                         <option value="right"></option>
@@ -66,39 +71,39 @@ export const EDITOR_VALUE_ACCESSOR: any = {
     providers: [DomHandler,EDITOR_VALUE_ACCESSOR]
 })
 export class Editor implements AfterViewInit,ControlValueAccessor {
-        
+
     @Output() onTextChange: EventEmitter<any> = new EventEmitter();
-    
+
     @Output() onSelectionChange: EventEmitter<any> = new EventEmitter();
-    
+
     @ContentChild(Header) toolbar;
-    
+
     @Input() style: any;
-        
+
     @Input() styleClass: string;
-    
+
     @Input() placeholder: string;
-    
+
     @Input() formats: string[];
-    
+
     @Output() onInit: EventEmitter<any> = new EventEmitter();
-    
+
     value: string;
-    
+
     _readonly: boolean;
-    
+
     onModelChange: Function = () => {};
-    
+
     onModelTouched: Function = () => {};
-    
+
     quill: any;
-    
+
     constructor(public el: ElementRef, public domHandler: DomHandler) {}
 
     ngAfterViewInit() {
-        let editorElement = this.domHandler.findSingle(this.el.nativeElement ,'div.ui-editor-content'); 
-        let toolbarElement = this.domHandler.findSingle(this.el.nativeElement ,'div.ui-editor-toolbar'); 
-        
+        let editorElement = this.domHandler.findSingle(this.el.nativeElement ,'div.ui-editor-content');
+        let toolbarElement = this.domHandler.findSingle(this.el.nativeElement ,'div.ui-editor-toolbar');
+
         this.quill = new Quill(editorElement, {
           modules: {
               toolbar: toolbarElement
@@ -108,11 +113,11 @@ export class Editor implements AfterViewInit,ControlValueAccessor {
           theme: 'snow',
           formats: this.formats
         });
-                
+
         if(this.value) {
             this.quill.pasteHTML(this.value);
         }
-        
+
         this.quill.on('text-change', (delta, oldContents, source) => {
             let html = editorElement.children[0].innerHTML;
             let text = this.quill.getText();
@@ -126,14 +131,14 @@ export class Editor implements AfterViewInit,ControlValueAccessor {
                 delta: delta,
                 source: source
             });
-            
+
             this.onModelChange(html);
 
             if(source === 'user') {
                 this.onModelTouched();
             }
         });
-        
+
         this.quill.on('selection-change', (range, oldRange, source) => {
             this.onSelectionChange.emit({
                 range: range,
@@ -141,15 +146,15 @@ export class Editor implements AfterViewInit,ControlValueAccessor {
                 source: source
             });
         });
-        
+
         this.onInit.emit({
             editor: this.quill
         });
     }
-        
+
     writeValue(value: any) : void {
         this.value = value;
-                
+
         if(this.quill) {
             if(value)
                 this.quill.pasteHTML(value);
@@ -157,7 +162,7 @@ export class Editor implements AfterViewInit,ControlValueAccessor {
                 this.quill.setText('');
         }
     }
-    
+
     registerOnChange(fn: Function): void {
         this.onModelChange = fn;
     }
@@ -165,18 +170,18 @@ export class Editor implements AfterViewInit,ControlValueAccessor {
     registerOnTouched(fn: Function): void {
         this.onModelTouched = fn;
     }
-    
+
     getQuill() {
         return this.quill;
     }
-    
+
     @Input() get readonly(): boolean {
         return this._readonly;
     }
 
     set readonly(val:boolean) {
         this._readonly = val;
-        
+
         if(this.quill) {
             if(this._readonly)
                 this.quill.disable();

@@ -4,7 +4,7 @@
 
 # PrimeNG
 
-To build you need and nodeJs at version 10.19.0 and npm at version 6.13.4. I suggest using NVM or NVM for Windows with multiple versions.
+To build you need and NODEJS at VERSION 10.19.0 (!!!) and npm at version 6.13.4. I suggest using NVM or NVM for Windows with multiple versions.
 To send to npm repository:
     1) RUN  npm run build-redistribute
     2) Then change version of app in package.json
@@ -16,3 +16,10 @@ UI Components for Angular
 See [PrimeNG homepage](http://www.primefaces.org/primeng) for live showcase and documentation.
 
 ![alt text](https://www.primefaces.org/primeng/assets/showcase/images/primeng-sidebar.svg "PrimeNG")
+
+Błędy:
+1) primodials is not defined - posiadasz złą wersję nodeJS
+2) no such file or directory, stat (...) primeng\resources\themes\cruze' - spróbuj jeszcze raz, nie wiem z czego to wynika
+2) no such file or directory, chmod (...) primeng\resources\themes\cupertino\theme.scss' - niestety, jak wyżej,
+
+

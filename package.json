@@ -1,6 +1,6 @@
 {
   "name": "primeng_wcag",
-  "version": "4.3.8",
+  "version": "4.3.12",
   "license": "MIT",
   "scripts": {
     "ng": "ng",

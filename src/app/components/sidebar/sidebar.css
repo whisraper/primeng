@@ -109,9 +109,20 @@
 
 @media screen and (max-width: 64em) {
     .ui-sidebar-left.ui-sidebar-lg,
-    .ui-sidebar-left.ui-sidebar-md, 
+    .ui-sidebar-left.ui-sidebar-md,
     .ui-sidebar-right.ui-sidebar-lg,
     .ui-sidebar-right.ui-sidebar-md {
         width: 20em;
     }
+}
+.hidden-nav-link a {
+  display: inline;
+  font-size: 1.27em;
+  left: -9000em;
+  padding: 5px 10px;
+  position: absolute;
+  text-align: center;
+  text-decoration: none;
+  width: 150px;
+  z-index: 1;
 }
